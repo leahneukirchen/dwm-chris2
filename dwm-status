@@ -1,0 +1,10 @@
+#!/bin/sh
+
+while :; do
+  [ $(/usr/sbin/apm -a) -eq 1 ] && BAT="LOAD" || BAT="BATT"
+  FILL=$(/usr/sbin/apm -l)
+  MEM=$(vmstat | awk '/[0-9][0-9]/ {print $4}')
+  DATE=$(date +"%d%b%Y %H:%M" | tr A-Z a-z)
+  echo "$FILL% $BAT | $MEM | $DATE"
+  sleep 5
+done
