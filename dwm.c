@@ -532,7 +532,7 @@ drawbar(void) {
 	if((dc.w = dc.x - x) > bh) {
 		dc.x = x;
 		if(sel) {
-			drawtext(sel->name, dc.sel, False);
+			drawtext(sel->name, dc.sel, True);
 			drawsquare(sel->isfixed, sel->isfloating, False, dc.sel);
 		}
 		else
