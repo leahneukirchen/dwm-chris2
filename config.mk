@@ -1,5 +1,5 @@
 # dwm version
-VERSION = 5.1
+VERSION = 5.8.2
 
 # Customize below to fit your system
 
@@ -7,21 +7,23 @@ VERSION = 5.1
 PREFIX = /usr/local
 MANPREFIX = ${PREFIX}/share/man
 
-X11INC = /usr/pkg/include
-X11LIB = /usr/pkg/lib
+X11INC = /usr/X11R6/include
+X11LIB = /usr/X11R6/lib
 
-# Xinerama, comment if you don't want it
+# Xinerama
 XINERAMALIBS = -L${X11LIB} -lXinerama
 XINERAMAFLAGS = -DXINERAMA
 
 # includes and libs
 INCS = -I. -I/usr/include -I${X11INC}
-LIBS = -Wl,-R${X11LIB} -L${X11LIB} -lX11 ${XINERAMALIBS}
+LIBS = -L/usr/lib -lc -L${X11LIB} -lX11 ${XINERAMALIBS}
 
 # flags
 CPPFLAGS = -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
-CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
-LDFLAGS = -s ${LIBS}
+CFLAGS = -g -std=c99 -pedantic -Wall -O0 ${INCS} ${CPPFLAGS}
+#CFLAGS = -std=c99 -pedantic -Wall -Os ${INCS} ${CPPFLAGS}
+LDFLAGS = -g ${LIBS}
+#LDFLAGS = -s ${LIBS}
 
 # Solaris
 #CFLAGS = -fast ${INCS} -DVERSION=\"${VERSION}\"
