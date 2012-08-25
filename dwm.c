@@ -606,6 +606,11 @@ configurerequest(XEvent *e) {
 	if((c = wintoclient(ev->window))) {
 		if(ev->value_mask & CWBorderWidth)
 			c->bw = ev->border_width;
+                if(ev->value_mask & CWWidth) {
+			c->oldw = c->w;
+			c->w = ev->width;
+                        arrange(c->mon);
+		}
 		else if(c->isfloating || !selmon->lt[selmon->sellt]->arrange) {
 			m = c->mon;
 			if(ev->value_mask & CWX) {
@@ -615,10 +620,6 @@ configurerequest(XEvent *e) {
 			if(ev->value_mask & CWY) {
 				c->oldy = c->y;
 				c->y = m->my + ev->y;
-			}
-			if(ev->value_mask & CWWidth) {
-				c->oldw = c->w;
-				c->w = ev->width;
 			}
 			if(ev->value_mask & CWHeight) {
 				c->oldh = c->h;
@@ -1410,12 +1411,11 @@ resizemouse(const Arg *arg) {
 			if(c->mon->wx + nw >= selmon->wx && c->mon->wx + nw <= selmon->wx + selmon->ww
 			&& c->mon->wy + nh >= selmon->wy && c->mon->wy + nh <= selmon->wy + selmon->wh)
 			{
-				if(!c->isfloating && selmon->lt[selmon->sellt]->arrange
+				if(0 && !c->isfloating && selmon->lt[selmon->sellt]->arrange
 				&& (abs(nw - c->w) > snap || abs(nh - c->h) > snap))
 					togglefloating(NULL);
 			}
-			if(!selmon->lt[selmon->sellt]->arrange || c->isfloating)
-				resize(c, c->x, c->y, nw, nh, True);
+			resize(c, c->x, c->y, nw, nh, True);
 			break;
 		}
 	} while(ev.type != ButtonRelease);
@@ -1427,6 +1427,7 @@ resizemouse(const Arg *arg) {
 		selmon = m;
 		focus(NULL);
 	}
+        arrange(selmon);
 }
 
 void
@@ -1727,26 +1728,21 @@ textnw(const char *text, unsigned int len) {
 
 void
 tile(Monitor *m) {
-	unsigned int i, n, h, mw, my, ty;
+	unsigned int i, n, h, mx, ty;
 	Client *c;
 
 	for(n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
 	if(n == 0)
 		return;
 
-	if(n > m->nmaster)
-		mw = m->nmaster ? m->ww * m->mfact : 0;
-	else
-		mw = m->ww;
-	for(i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+	for(i = mx = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if(i < m->nmaster) {
-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), False);
-			my += HEIGHT(c);
+			resize(c, m->wx + mx, m->wy, c->w, m->wh - (2*c->bw), False);
+			mx += WIDTH(c);
 		}
 		else {
 			h = (m->wh - ty) / (n - i);
-			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), False);
+			resize(c, m->wx + mx, m->wy + ty, c->w, h - (2*c->bw), False);
 			ty += HEIGHT(c);
 		}
 }
