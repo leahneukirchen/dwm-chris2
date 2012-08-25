@@ -1925,9 +1925,9 @@ updategeom(void) {
 					dirty = True;
 					m->num = i;
 					m->mx = m->wx = unique[i].x_org;
-					m->my = m->wy = unique[i].y_org;
+					m->my = m->wy = unique[i].y_org + 12;
 					m->mw = m->ww = unique[i].width;
-					m->mh = m->wh = unique[i].height;
+					m->mh = m->wh = unique[i].height - 12;
 					updatebarpos(m);
 				}
 		}
