@@ -1,0 +1,19 @@
+This is a slight hack on dwm which fixes the window widths, makes you
+modify them with Mod-Mouse3 even in tiling and displays masters as
+columns.  zoomswap has been applied.  tilemovemouse.c has also been added.
+
+Note that monocle mode corrupts window widths.  Use togglefullscreen.c instead.
+
+This mode is very pleasant on a wide screen with 2 or more masters.
+
+da6e237 Button2 view
+45ba387 change key bindings
+a0b5cdf various settings
+94a0862 monochrome colors
+a44aa4c 12px top border
+71f7712 keep window width fixed, layout master columnwise
+4508b00 togglefullscreen.patch
+fafccf4 tilemousemove.patch
+eca7a62 zoomswap.patch
+eef2f6b restart.patch
+530ac08 add default config.h
