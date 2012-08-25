@@ -280,6 +280,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 };
 static Atom wmatom[WMLast], netatom[NetLast];
 static Bool running = True;
+static Bool restart = False;
 static Cursor cursor[CurLast];
 static Display *dpy;
 static DC dc;
@@ -1337,6 +1338,8 @@ propertynotify(XEvent *e) {
 
 void
 quit(const Arg *arg) {
+	if(arg->i)
+		restart = True;
 	running = False;
 }
 
@@ -2179,6 +2182,8 @@ main(int argc, char *argv[]) {
 	setup();
 	scan();
 	run();
+	if(restart)
+		execvp(argv[0], argv);
 	cleanup();
 	XCloseDisplay(dpy);
 	return EXIT_SUCCESS;
